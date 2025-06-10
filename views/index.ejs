@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Weather App</title>
+    <meta name="description" content="Beautiful weather app with 3D illustrations and real-time weather data">
+    <meta name="theme-color" content="#1e1e2e">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="stylesheet" href="/styles.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌤️</text></svg>">
+</head>
+<body>
+
+    <div class="loading-screen" id="loadingScreen">
+        <div class="loading-spinner"></div>
+        <div class="loading-text">Loading Weather Data...</div>
+    </div>
+
+    <div class="stars"></div>
+
+    <div class="container">
+        
+        <div class="header">
+            <div class="location">
+                <% if (weatherData && weatherData.name) { %>
+                    <%= weatherData.name %>
+                <% } else { %>
+                    Weather App
+                <% } %>
+            </div>
+            <button class="menu-btn">⋯</button>
+        </div>
+
+
+        <form action="/submit" method="post" class="search-form">
+            <div class="form-group">
+                <label for="pin">Enter your pincode:</label>
+                <input type="number" name="pin" id="pin" placeholder="Enter your pincode" required>
+            </div>
+
+            <div class="form-group">
+                <label for="country">Select your country:</label>
+                <select name="country" id="country" required>
+                    <option value="IN">India</option>
+                    <option value="US">United States</option>
+                    <option value="GB">United Kingdom</option>
+                    <option value="CA">Canada</option>
+                    <option value="AU">Australia</option>
+                    <option value="DE">Germany</option>
+                    <option value="FR">France</option>
+                    <option value="JP">Japan</option>
+                    <option value="CN">China</option>
+                    <option value="BR">Brazil</option>
+                </select>
+            </div>
+
+            <button type="submit" class="submit-btn">Get Weather</button>
+
+    
+            <div style="display: flex; gap: 10px; margin-top: 15px;">
+                <button type="button" class="test-btn" onclick="fillTestData('10001', 'US')" style="flex: 1; padding: 8px; border: none; border-radius: 8px; background: rgba(255,255,255,0.1); color: white; font-size: 12px; cursor: pointer;">NYC</button>
+                <button type="button" class="test-btn" onclick="fillTestData('110001', 'IN')" style="flex: 1; padding: 8px; border: none; border-radius: 8px; background: rgba(255,255,255,0.1); color: white; font-size: 12px; cursor: pointer;">Delhi</button>
+                <button type="button" class="test-btn" onclick="fillTestData('90210', 'US')" style="flex: 1; padding: 8px; border: none; border-radius: 8px; background: rgba(255,255,255,0.1); color: white; font-size: 12px; cursor: pointer;">LA</button>
+            </div>
+        </form>
+
+
+        <% if (typeof error !== 'undefined' && error) { %>
+            <div class="error-message">
+                ⚠️ <%= error %>
+            </div>
+        <% } %>
+
+        <% if (weatherData && weatherData.name) { %>
+
+            <div class="main-weather">
+                <div class="weather-description"><%= weatherData.weather[0].description %></div>
+                <div class="temperature"><%= Math.round(weatherData.main.temp) %>°</div>
+                <div class="weather-details">
+                    Feels like <%= Math.round(weatherData.main.feels_like) %>° • <%= weatherData.weather[0].main %>
+                </div>
+
+
+                <div class="house-container">
+                    <div class="house">
+                        <div class="house-roof"></div>
+                        <div class="house-base">
+                            <div class="house-window left"></div>
+                            <div class="house-window right"></div>
+                            <div class="house-door"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="weather-details">
+                    <div style="display: flex; justify-content: space-between; margin-top: 20px; color: rgba(255,255,255,0.7); font-size: 14px;">
+                        <span>💧 <%= weatherData.main.humidity %>%</span>
+                        <span>💨 <%= weatherData.wind.speed %> m/s</span>
+                        <span>🌅 <%= new Date(weatherData.sys.sunrise * 1000).toLocaleTimeString('en-US', {hour: 'numeric', minute: '2-digit', hour12: true}) %></span>
+                        <span>🌇 <%= new Date(weatherData.sys.sunset * 1000).toLocaleTimeString('en-US', {hour: 'numeric', minute: '2-digit', hour12: true}) %></span>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="hourly-forecast">
+                <div class="section-title">
+                    📊 Hourly Forecast
+                </div>
+                <div class="forecast-scroll">
+            
+                </div>
+            </div>
+        <% } %>
+
+    
+        <div class="section-title">
+            🌍 Other Locations
+        </div>
+        <div class="location-cards">
+            
+        </div>
+    </div>
+
+    <script src="/script.js"></script>
+</body>
+</html>
